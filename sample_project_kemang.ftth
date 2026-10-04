@@ -1,0 +1,221 @@
+{
+  "file_format": "FTTH_NETWORK_PLANNER_PROJECT",
+  "schema_version": "1.0",
+  "project_name": "Proyek FTTH Kemang Sentral",
+  "saved_at": "2026-10-04 12:38:00",
+  "app_name": "FTTH Network Planner - GIS Survey & Routing System",
+  "settings": {
+    "routing_mode": "road",
+    "auto_pole_spacing_m": 80.0,
+    "slack_percentage": 10.0
+  },
+  "summary": {
+    "total_nodes": 5,
+    "total_cables": 4,
+    "total_cable_length_m": 433.29
+  },
+  "nodes": [
+    {
+      "id": "ODC-KMG-01",
+      "name": "ODC Sentral Kemang Raya",
+      "infra_type": "ODC (Optical Distribution Cabinet)",
+      "infra_code": "ODC",
+      "color": "#e74c3c",
+      "latitude": -6.2625,
+      "longitude": 106.8152,
+      "capacity": "288 Core",
+      "notes": "Koneksi Feeder Utama Telkom Kemang",
+      "created_at": "2026-10-04 12:38:00"
+    },
+    {
+      "id": "POLE-KMG-01",
+      "name": "Tiang Beton 9m Jl. Kemang Timur 1",
+      "infra_type": "Pole (Tiang Jaringan)",
+      "infra_code": "POLE",
+      "color": "#f39c12",
+      "latitude": -6.26315,
+      "longitude": 106.81585,
+      "capacity": "Tiang Tumpu / Joint Closure",
+      "notes": "Tiang Telkom Baru",
+      "created_at": "2026-10-04 12:38:00"
+    },
+    {
+      "id": "POLE-KMG-02",
+      "name": "Tiang Besi 7m Jl. Kemang Timur 2",
+      "infra_type": "Pole (Tiang Jaringan)",
+      "infra_code": "POLE",
+      "color": "#f39c12",
+      "latitude": -6.2638,
+      "longitude": 106.8165,
+      "capacity": "Tiang Distribusi",
+      "notes": "Kondisi tiang kokoh",
+      "created_at": "2026-10-04 12:38:00"
+    },
+    {
+      "id": "ODP-KMG-01",
+      "name": "ODP Cluster Kemang Pratama",
+      "infra_type": "ODP (Optical Distribution Point)",
+      "infra_code": "ODP",
+      "color": "#2ecc71",
+      "latitude": -6.2644,
+      "longitude": 106.8171,
+      "capacity": "16 Core / 16 Port",
+      "notes": "Kapasitas 1:16 Splitter",
+      "created_at": "2026-10-04 12:38:00"
+    },
+    {
+      "id": "ODP-KMG-02",
+      "name": "ODP Cluster Kemang Residence",
+      "infra_type": "ODP (Optical Distribution Point)",
+      "infra_code": "ODP",
+      "color": "#2ecc71",
+      "latitude": -6.26495,
+      "longitude": 106.8178,
+      "capacity": "8 Core / 8 Port",
+      "notes": "Kapasitas 1:8 Splitter",
+      "created_at": "2026-10-04 12:38:00"
+    }
+  ],
+  "cables": [
+    {
+      "id": "CAB-01",
+      "name": "Feeder ODC-KMG-01 ke POLE-KMG-01",
+      "cable_type": "Kabel Feeder (Backbone ODC)",
+      "cable_code": "FDR",
+      "color": "#e74c3c",
+      "source_node_id": "ODC-KMG-01",
+      "source_node_name": "ODC Sentral Kemang Raya",
+      "source_lat": -6.2625,
+      "source_lng": 106.8152,
+      "target_node_id": "POLE-KMG-01",
+      "target_node_name": "Tiang Beton 9m Jl. Kemang Timur 1",
+      "target_lat": -6.26315,
+      "target_lng": 106.81585,
+      "span_distance_m": 101.4,
+      "slack_percent": 10.0,
+      "total_length_m": 111.54,
+      "core_count": "48 Core",
+      "path_coordinates": [
+        [
+          -6.2625,
+          106.8152
+        ],
+        [
+          -6.2628,
+          106.8155
+        ],
+        [
+          -6.26315,
+          106.81585
+        ]
+      ],
+      "notes": "",
+      "created_at": "2026-10-04 12:38:00"
+    },
+    {
+      "id": "CAB-02",
+      "name": "Distribusi POLE-KMG-01 ke POLE-KMG-02",
+      "cable_type": "Kabel Distribusi (ODC ke ODP)",
+      "cable_code": "DST",
+      "color": "#3498db",
+      "source_node_id": "POLE-KMG-01",
+      "source_node_name": "Tiang Beton 9m Jl. Kemang Timur 1",
+      "source_lat": -6.26315,
+      "source_lng": 106.81585,
+      "target_node_id": "POLE-KMG-02",
+      "target_node_name": "Tiang Besi 7m Jl. Kemang Timur 2",
+      "target_lat": -6.2638,
+      "target_lng": 106.8165,
+      "span_distance_m": 100.8,
+      "slack_percent": 10.0,
+      "total_length_m": 110.88,
+      "core_count": "24 Core",
+      "path_coordinates": [
+        [
+          -6.26315,
+          106.81585
+        ],
+        [
+          -6.26348,
+          106.81618
+        ],
+        [
+          -6.2638,
+          106.8165
+        ]
+      ],
+      "notes": "",
+      "created_at": "2026-10-04 12:38:00"
+    },
+    {
+      "id": "CAB-03",
+      "name": "Distribusi POLE-KMG-02 ke ODP-KMG-01",
+      "cable_type": "Kabel Distribusi (ODC ke ODP)",
+      "cable_code": "DST",
+      "color": "#3498db",
+      "source_node_id": "POLE-KMG-02",
+      "source_node_name": "Tiang Besi 7m Jl. Kemang Timur 2",
+      "source_lat": -6.2638,
+      "source_lng": 106.8165,
+      "target_node_id": "ODP-KMG-01",
+      "target_node_name": "ODP Cluster Kemang Pratama",
+      "target_lat": -6.2644,
+      "target_lng": 106.8171,
+      "span_distance_m": 94.2,
+      "slack_percent": 10.0,
+      "total_length_m": 103.62,
+      "core_count": "24 Core",
+      "path_coordinates": [
+        [
+          -6.2638,
+          106.8165
+        ],
+        [
+          -6.2641,
+          106.8168
+        ],
+        [
+          -6.2644,
+          106.8171
+        ]
+      ],
+      "notes": "",
+      "created_at": "2026-10-04 12:38:00"
+    },
+    {
+      "id": "CAB-04",
+      "name": "Distribusi ODP-KMG-01 ke ODP-KMG-02",
+      "cable_type": "Kabel Distribusi (ODC ke ODP)",
+      "cable_code": "DST",
+      "color": "#3498db",
+      "source_node_id": "ODP-KMG-01",
+      "source_node_name": "ODP Cluster Kemang Pratama",
+      "source_lat": -6.2644,
+      "source_lng": 106.8171,
+      "target_node_id": "ODP-KMG-02",
+      "target_node_name": "ODP Cluster Kemang Residence",
+      "target_lat": -6.26495,
+      "target_lng": 106.8178,
+      "span_distance_m": 97.5,
+      "slack_percent": 10.0,
+      "total_length_m": 107.25,
+      "core_count": "12 Core",
+      "path_coordinates": [
+        [
+          -6.2644,
+          106.8171
+        ],
+        [
+          -6.26465,
+          106.81745
+        ],
+        [
+          -6.26495,
+          106.8178
+        ]
+      ],
+      "notes": "",
+      "created_at": "2026-10-04 12:38:00"
+    }
+  ]
+}

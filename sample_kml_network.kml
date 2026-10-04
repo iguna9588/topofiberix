@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>FTTH Survey Kemang Timur</name>
+    <Placemark>
+      <name>ODC-KT-01</name>
+      <description>ODC Sentral Kemang Timur (144 Core)</description>
+      <Point>
+        <coordinates>106.8180,-6.2650,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>ODP-KT-01</name>
+      <description>ODP Cluster Kemang Timur 1 (16 Port)</description>
+      <Point>
+        <coordinates>106.8210,-6.2680,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Kabel Distribusi ODC-KT-01 ke ODP-KT-01</name>
+      <description>Kabel Distribusi 24 Core</description>
+      <LineString>
+        <coordinates>
+          106.8180,-6.2650,0
+          106.8195,-6.2665,0
+          106.8210,-6.2680,0
+        </coordinates>
+      </LineString>
+    </Placemark>
+  </Document>
+</kml>

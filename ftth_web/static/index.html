@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FTTH Network Planner - Web & Desktop Hybrid GIS</title>
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Leaflet.js CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+
+  <!-- Top Header Bar -->
+  <header class="header-bar">
+    <div class="brand">
+      <div class="brand-icon">🌐</div>
+      <div>
+        <div class="brand-title">FTTH Network Planner</div>
+        <div class="brand-subtitle">GIS Fiber Optic Planning System (Web & Desktop Edition)</div>
+      </div>
+    </div>
+
+    <!-- Quick Project Actions -->
+    <div class="header-actions">
+      <input type="file" id="file-import-input" accept=".ftth,.json" style="display:none;">
+      <button class="btn btn-secondary btn-sm" id="btn-new-proj" title="Buat Proyek Baru">📄 Baru</button>
+      <button class="btn btn-secondary btn-sm" id="btn-open-proj" title="Buka File Proyek (.ftth / .json)">📂 Buka Proyek</button>
+      <button class="btn btn-secondary btn-sm" id="btn-save-proj" title="Simpan File Proyek">💾 Simpan</button>
+      <button class="btn btn-primary btn-sm" id="btn-export-kml" title="Ekspor ke Google Earth Pro">🌍 Ekspor KML</button>
+    </div>
+  </header>
+
+  <!-- Main Container: Sidebar + Map -->
+  <main class="app-container">
+    
+    <!-- Left Sidebar Control Panel -->
+    <aside class="sidebar">
+      
+      <!-- Tab Navigation -->
+      <nav class="tabs-nav">
+        <button class="tab-btn active" data-tab="tab-nodes">📌 Titik Simpul</button>
+        <button class="tab-btn" data-tab="tab-routing">🔗 Jalur Kabel</button>
+        <button class="tab-btn" data-tab="tab-review">🔍 Review Desain</button>
+      </nav>
+
+      <!-- TAB 1: Manajemen Simpul / Titik -->
+      <div class="tab-content active" id="tab-nodes">
+        <div class="card-box">
+          <div class="card-title">📌 Form Titik Infrastruktur</div>
+          
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Kode / ID Simpul:</label>
+              <input type="text" class="form-input" id="input-node-id" placeholder="cth: ODP-01">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Jenis Infrastruktur:</label>
+              <select class="form-select" id="combo-node-type">
+                <option value="ODP">ODP (Optical Distribution Point)</option>
+                <option value="ODC">ODC (Optical Distribution Cabinet)</option>
+                <option value="POLE">Tiang / Pole</option>
+                <option value="CLOSURE">Joint Closure</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Nama / Label Titik:</label>
+            <input type="text" class="form-input" id="input-node-name" placeholder="cth: ODP Jl. Kemang No. 12">
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Latitude:</label>
+              <input type="text" class="form-input" id="input-node-lat" placeholder="-6.200000" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Longitude:</label>
+              <input type="text" class="form-input" id="input-node-lng" placeholder="106.800000" readonly>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Kapasitas:</label>
+              <input type="text" class="form-input" id="input-node-cap" placeholder="cth: 16 Core / 16 Port">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Catatan:</label>
+              <input type="text" class="form-input" id="input-node-notes" placeholder="Catatan survei...">
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 8px; margin-top: 6px;">
+            <button class="btn btn-primary" id="btn-save-node" style="flex: 2;">➕ Simpan Titik Simpul</button>
+            <button class="btn btn-secondary" id="btn-reset-form" style="flex: 1;">🔄 Reset</button>
+          </div>
+        </div>
+
+        <!-- Tabel Titik Terdata -->
+        <div class="card-box" style="margin-bottom: 0;">
+          <div class="card-title">
+            <span>📋 Daftar Simpul Terdata</span>
+            <span id="lbl-total-nodes" style="color: var(--primary-dark); font-size: 11px;">0 Titik</span>
+          </div>
+          
+          <div class="table-container">
+            <table class="data-table" id="table-nodes">
+              <thead>
+                <tr>
+                  <th style="width: 28px;"></th>
+                  <th>ID</th>
+                  <th>Tipe</th>
+                  <th>Nama / Lokasi</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-nodes"></tbody>
+            </table>
+          </div>
+
+          <div style="margin-top: 8px; display: flex; justify-content: flex-end;">
+            <button class="btn btn-danger btn-sm" id="btn-delete-node">🗑️ Hapus Terpilih</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: Routing Jalur Kabel -->
+      <div class="tab-content" id="tab-routing">
+        <div class="card-box">
+          <div class="card-title">📏 Parameter Rute & Kalkulasi Jarak</div>
+          
+          <div class="form-group">
+            <label class="form-label">Metode Routing Jalur:</label>
+            <select class="form-select" id="combo-routing-mode">
+              <option value="road">🛣️ Ikuti Kontur Jalan (OSRM Road-Snapped)</option>
+              <option value="straight">📏 Garis Lurus (Aerial / Direct Line)</option>
+            </select>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Titik Asal (Source):</label>
+              <select class="form-select" id="combo-src-node">
+                <option value="">-- Pilih Titik Asal --</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Titik Tujuan (Target):</label>
+              <select class="form-select" id="combo-dst-node">
+                <option value="">-- Pilih Titik Tujuan --</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Jenis Kabel:</label>
+              <select class="form-select" id="combo-cable-type">
+                <option value="Kabel Distribusi (ODC ke ODP)">Kabel Distribusi</option>
+                <option value="Kabel Feeder (Backbone ODC)">Kabel Feeder</option>
+                <option value="Drop Cable (ODP ke Pelanggan)">Drop Cable</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Cadangan Kabel (Slack %):</label>
+              <input type="number" class="form-input" id="input-slack" value="10" min="0" max="50">
+            </div>
+          </div>
+
+          <!-- Metrik Hasil Perhitungan Real-Time -->
+          <div class="metrics-grid" style="margin-top: 6px;">
+            <div class="metric-card">
+              <div class="metric-val" id="val-span-dist">0.0 m</div>
+              <div class="metric-lbl">Jarak Bentangan (Span)</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-val" id="val-total-cable" style="color: #059669;">0.0 m</div>
+              <div class="metric-lbl">Total Riil (+ Slack)</div>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-block" id="btn-add-cable">➕ Tambah Rute Kabel Langsung</button>
+
+          <!-- Auto-Pole Spacing Box -->
+          <div style="background: var(--bg-elevated); padding: 10px; border-radius: var(--radius-sm); margin-top: 12px; border: 1px dashed var(--border-strong);">
+            <div style="font-size: 11px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">⚙️ Pembagian Tiang Otomatis (Auto-Pole Spacing)</div>
+            <div class="form-grid-2" style="align-items: center;">
+              <div>
+                <label class="form-label">Interval Tiang (m):</label>
+                <input type="number" class="form-input" id="input-spacing" value="80" min="30" max="150">
+              </div>
+              <div style="padding-top: 18px;">
+                <button class="btn btn-success btn-block" id="btn-auto-poles">✨ Bagi Tiang & Rute</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabel Jalur Kabel Terdata -->
+        <div class="card-box" style="margin-bottom: 0;">
+          <div class="card-title">
+            <span>🔗 Daftar Rute Kabel Terdata</span>
+            <span id="lbl-total-cables" style="color: var(--primary-dark); font-size: 11px;">0 Rute</span>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table" id="table-cables">
+              <thead>
+                <tr>
+                  <th style="width: 28px;"></th>
+                  <th>ID</th>
+                  <th>Relasi Rute</th>
+                  <th>Panjang</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-cables"></tbody>
+            </table>
+          </div>
+
+          <div style="margin-top: 8px; display: flex; justify-content: flex-end;">
+            <button class="btn btn-danger btn-sm" id="btn-delete-cable">🗑️ Hapus Rute</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: Review Desain & Quality Control -->
+      <div class="tab-content" id="tab-review">
+        <div class="card-box">
+          <div class="card-title">🔍 Rekapitulasi Audit Quality Control</div>
+          
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-val" id="metric-total-cable">0.0 m</div>
+              <div class="metric-lbl">Total Panjang Kabel</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-val" id="metric-total-poles">0 Tiang</div>
+              <div class="metric-lbl">Total Tiang Terdata</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-val" id="metric-total-odp">0 ODP</div>
+              <div class="metric-lbl">Total Titik ODP</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-val" id="metric-audit-status" style="font-size: 13px; padding-top: 4px;">-</div>
+              <div class="metric-lbl">Status Kelayakan</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-box" style="margin-bottom: 0;">
+          <div class="card-title">📋 Catatan Temuan & Peringatan QC</div>
+          <div class="table-container" style="max-height: 280px;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Status</th>
+                  <th>Objek</th>
+                  <th>Deskripsi Temuan</th>
+                  <th>Rekomendasi</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-audit-findings"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- Right Map Container -->
+    <section class="map-container">
+      
+      <!-- Floating Map Search Bar -->
+      <div class="map-search-bar">
+        <span>🔍</span>
+        <input type="text" id="input-search-map" placeholder="Cari nama kota, kelurahan, atau jalan (Enter)...">
+      </div>
+
+      <!-- Leaflet Interactive Map -->
+      <div id="map"></div>
+    </section>
+
+  </main>
+
+  <!-- Bottom Status Bar -->
+  <footer class="status-bar">
+    <div class="status-msg" id="status-msg">Siap. Klik titik mana saja di peta untuk menentukan koordinat simpul.</div>
+    <div class="status-coords" id="status-coords">📍 Lat: -- | Lng: --</div>
+  </footer>
+
+  <!-- Leaflet.js Library -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  
+  <!-- Custom JS Modules -->
+  <script src="/static/js/map.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

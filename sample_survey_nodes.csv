@@ -1,0 +1,5 @@
+Kode_Titik,Nama_Lokasi,Tipe,Latitude,Longitude,Kapasitas,Catatan
+ODC-KBY-01,ODC Sentral Kebayoran,ODC,-6.2412,106.8012,288 Core,Main Hub
+POLE-KBY-01,Tiang 9m Jl. Gandaria 1,POLE,-6.2425,106.8028,Tiang Beton,Joint Closure JC-01
+POLE-KBY-02,Tiang 7m Jl. Gandaria 2,POLE,-6.2438,106.8042,Tiang Besi,Tiang Tumpu
+ODP-KBY-01,ODP Cluster Gandaria Indah,ODP,-6.245,106.8055,16 Port,Pelanggan Residensial
